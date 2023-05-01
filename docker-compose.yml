@@ -1,0 +1,19 @@
+version: '3'
+services:
+  myapp:
+    build: priceProcessor
+    ports:
+      - "5000:5000"
+    environment:
+      FLASK_APP: process
+      MONGO_SERVER_URL: mongodb://mongo
+      MONGO_SERVER_USER: taller
+      MONGO_SERVER_PASS: taller
+    command: flask run --host=0.0.0.0
+
+  mongo:
+    image: mongo
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: taller
+      MONGO_INITDB_ROOT_PASSWORD: taller
