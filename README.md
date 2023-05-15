@@ -11,14 +11,14 @@ generado un makefile para facilitar el proceso de creación de imágenes y comie
 
 Creación de las imagenes
 
-    `make docker-image`
+    make docker-image
 
 Levantar los containers
 
-    `docker-compose-up`
+    make docker-compose-up
 
 Bajar los containers
 
-    `docker-compose-down`
+    make docker-compose-down
 
 
