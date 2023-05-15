@@ -13,8 +13,8 @@ services:
 #      - ./shared/agentpaths:/agentpaths
     networks:
       - testing_net
-#    logging:
-#      driver: none
+    logging:
+      driver: none
 
   priceprocessor:
     container_name: priceprocessor
@@ -23,7 +23,7 @@ services:
       - "5000:5000"
     environment:
       HOST: priceprocessor
-      POST: 5000
+      PORT: 5000
       CONN_STR: mongodb://mongoUser:mongoPass@mongodb
       MONGO_SERVER_URL: mongodb
       MONGO_SERVER_USER: mongoUser

@@ -29,7 +29,7 @@ def main():
     try:
         logging.info("Initializing... ")
         # threads = []
-        gov = Scrapper(f"http://{processor}:5000/")
+        gov = Scrapper(f"http://{processor}:5000/products")
         # gov.scrap()
         # gov.send_data()
 

@@ -1,57 +1,61 @@
+import logging
 import os
-from flask import Flask, jsonify, request
-from pymongo import MongoClient
+from threading import Thread
 
-port = int(os.environ.get('PORT', 5000))
-host = os.environ.get('HOST', '0.0.0.0')
-
-MONGO_SERVER_URL = os.environ['MONGO_SERVER_URL']
-MONGO_SERVER_USER = os.environ['MONGO_SERVER_USER']
-MONGO_SERVER_PASS = os.environ['MONGO_SERVER_PASS']
-
-print(f"Connecting to {MONGO_SERVER_URL}")
-mongo_client = MongoClient(MONGO_SERVER_URL, username=MONGO_SERVER_USER, password=MONGO_SERVER_PASS);
-
-changuito_db = mongo_client["changuito"]
-products_collection = changuito_db["products"]
-
-app = Flask(__name__)
-
-@app.route('/', methods=['POST'])
-def handle_post():
-    data = request.get_json()
-    response = build_response(data)
-    return response
+from src.products_manager import Products
+from src.server import Server
 
 
-def build_response(data):
-    bulk_data = []
-    for item in data:
-        reduced = {
-            "productName": get_product_name(item),
-            "price": get_price(item),
-            "EAN": get_ean(item)
+# from pymongo import MongoClient
+
+
+def load_envs_config():
+    return {
+        'server': {
+            'host': os.environ.get('HOST', '0.0.0.0'),
+            'port': int(os.environ.get('PORT', 5000))
+        },
+        'db': {
+            'url': os.environ.get('MONGO_SERVER_URL', ''),
+            'user': os.environ.get('MONGO_SERVER_USER', ''),
+            'pass': os.environ.get('MONGO_SERVER_PASS', ''),
         }
-        bulk_data.append(reduced)
-    # Warn: each element gets a new ObjectId field '_id'. This field is not serializable by default.
-    inserted = products_collection.insert_many(bulk_data)
-    return {"inserted": len(inserted.inserted_ids)}
+    }
 
 
-def get_product_name(product):
-    return product["productName"]
+# def db_setup():
+#     print(f"Connecting to {MONGO_SERVER_URL}")
+#     mongo_client = MongoClient(MONGO_SERVER_URL, username=MONGO_SERVER_USER, password=MONGO_SERVER_PASS);
+#     changuito_db = mongo_client["changuito"]
+#     products_collection = changuito_db["products"]
 
 
-def get_price(product):
-    return product["priceRange"]["sellingPrice"]
+def initialize_log():
+    logging.basicConfig(
+        format='%(asctime)s %(levelname)-8s %(message)s',
+        level=logging.INFO,
+        datefmt='%Y-%m-%d %H:%M:%S',
+    )
 
 
-def get_ean(product):
-    specs_groups = product["specificationGroups"]
-    group = next(group for group in specs_groups if group["name"] == "Especificaciones Genesix")
-    ean_prop = next(prop for prop in group["specifications"] if prop["name"] == "EAN")
-    return ean_prop["values"]
+def main():
+    initialize_log()
+    try:
+        configs = load_envs_config()
+        # db_setup()
+        logging.info("DB runnig... ")
+        productManager = Products()
+        logging.info("Products() created... ")
+        host, port = configs.get('server').values()
+        server = Server(host, port, productManager)
+        logging.info(" Server(port, host, productManager) created... ")
+        serverThread = Thread(target=server.run)
+        serverThread.start()
+        logging.info("Server runnig... ")
+        serverThread.join()
+    except Exception as error:
+        logging.error(f'Something is wrong in main function {error}')
 
 
-if __name__ == '__main__':
-    app.run(host=host, port=port)
+if __name__ == "__main__":
+    main()
