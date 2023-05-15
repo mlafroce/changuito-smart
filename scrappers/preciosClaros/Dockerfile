@@ -1,6 +1,5 @@
-# Dockerfile
 FROM python:3.10
-COPY priceProcessor /
+COPY scrappers/preciosClaros /
 RUN pip install -r requirements.txt
 ENTRYPOINT ["/bin/sh"]
-#CMD ["python","process.py"]
+#CMD ["python3", "./main.py"]

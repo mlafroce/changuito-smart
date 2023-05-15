@@ -2,6 +2,9 @@ import os
 from flask import Flask, jsonify, request
 from pymongo import MongoClient
 
+port = int(os.environ.get('PORT', 5000))
+host = os.environ.get('HOST', '0.0.0.0')
+
 MONGO_SERVER_URL = os.environ['MONGO_SERVER_URL']
 MONGO_SERVER_USER = os.environ['MONGO_SERVER_USER']
 MONGO_SERVER_PASS = os.environ['MONGO_SERVER_PASS']
@@ -20,6 +23,7 @@ def handle_post():
     response = build_response(data)
     return response
 
+
 def build_response(data):
     bulk_data = []
     for item in data:
@@ -33,11 +37,14 @@ def build_response(data):
     inserted = products_collection.insert_many(bulk_data)
     return {"inserted": len(inserted.inserted_ids)}
 
+
 def get_product_name(product):
     return product["productName"]
 
+
 def get_price(product):
     return product["priceRange"]["sellingPrice"]
+
 
 def get_ean(product):
     specs_groups = product["specificationGroups"]
@@ -45,5 +52,6 @@ def get_ean(product):
     ean_prop = next(prop for prop in group["specifications"] if prop["name"] == "EAN")
     return ean_prop["values"]
 
+
 if __name__ == '__main__':
-    app.run()
+    app.run(host=host, port=port)

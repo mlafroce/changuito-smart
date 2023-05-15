@@ -1,0 +1,88 @@
+version: '3'
+services:
+  backupregister:
+    container_name: backupregister
+    image: backupregister:latest
+    entrypoint: python3 /main.py
+    environment:
+      - PYTHONUNBUFFERED=1
+      - IP=backupregister
+      - PORT=12340
+      - SERVER_LISTEN_BACKLOG=5
+    volumes:
+      - ./shared/backups_registry.json:/backups_registry.json
+      - ./shared/backups:/backups
+    networks:
+      - testing_net
+  
+  serversregister:
+    container_name: serversregister
+    image: serversregister:latest
+    entrypoint: python3 /main.py
+    environment:
+      - PYTHONUNBUFFERED=1
+      - IP=serversregister
+      - PORT=12341
+      - SERVER_LISTEN_BACKLOG=5
+    volumes:
+      - ./shared/servers_registry.txt:/servers_registry.txt
+    networks:
+      - testing_net
+
+  backupserver:
+    container_name: backupserver
+    image: backupserver:latest
+    entrypoint: python3 /main.py
+    environment:
+      - PYTHONUNBUFFERED=1
+      - IP=backupserver
+      - PORT=12345
+      - SERVER_LISTEN_BACKLOG=5
+      - BACKUPREGISTER_IP=backupregister
+      - BACKUPREGISTER_PORT=12340
+      - SERVERSREGISTER_IP=serversregister
+      - SERVERSREGISTER_PORT=12341
+    volumes:
+      - ./shared/servers_registry.json:/servers_registry.json
+    depends_on:
+      - backupregister
+      - serversregister
+      - agentbackuper
+    networks:
+      - testing_net
+
+  externalclient:
+    container_name: externalclient
+    image: externalclient:latest
+    entrypoint: python3 /main.py
+    environment:
+      - SERVER_IP=backupserver
+      - SERVER_PORT=12345
+      - REQUEST_LAPSE=1
+    volumes:
+      - ./shared/requests.json:/requests.json:ro
+    depends_on:
+      - backupserver
+    networks:
+      - testing_net
+
+  agentbackuper:
+    container_name: agentbackuper
+    image: agentbackuper:latest
+    entrypoint: python3 /main.py
+    environment:
+      - PYTHONUNBUFFERED=1
+      - IP=agentbackuper
+      - PORT=12340
+      - SERVER_LISTEN_BACKLOG=5
+    volumes:
+      - ./shared/agentpaths:/agentpaths
+    networks:
+      - testing_net
+
+networks:
+  testing_net:
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.25.125.0/24

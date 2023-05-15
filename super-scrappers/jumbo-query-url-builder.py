@@ -31,8 +31,8 @@ extensions = {"persistedQuery":{"version":1,"sha256Hash":"8d81f8e7468bea2046b664
 extensions_encoded = urllib.parse.quote(json.dumps(extensions, separators=(',', ':')))
 
 query_path = f"{HOST}/{QUERY_PATH_ROOT}?{QUERY_PATH_VARIABLES}&extensions={extensions_encoded}"
-
-#resp = requests.get(query_path)
-
-#print(resp.json())
 print(query_path)
+
+resp = requests.get(query_path)
+
+print(resp.json())

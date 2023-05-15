@@ -1,19 +1,56 @@
 version: '3'
 services:
-  myapp:
-    build: priceProcessor
+  preciosclarosscrapper:
+    container_name: preciosclarosscrapper
+    image: preciosclarosscrapper:latest
+    entrypoint: python3 /main.py
+    environment:
+      PYTHONUNBUFFERED: 1
+      HOST: 8008
+      POST: preciosclarosscrapper
+      PROCESSOR_HOST: priceprocessor
+#    volumes:
+#      - ./shared/agentpaths:/agentpaths
+    networks:
+      - testing_net
+#    logging:
+#      driver: none
+
+  priceprocessor:
+    container_name: priceprocessor
+    image: priceprocessor:latest
     ports:
       - "5000:5000"
     environment:
-      FLASK_APP: process
-      MONGO_SERVER_URL: mongodb://mongo
-      MONGO_SERVER_USER: taller
-      MONGO_SERVER_PASS: taller
-    command: flask run --host=0.0.0.0
-
-  mongo:
+      HOST: priceprocessor
+      POST: 5000
+      CONN_STR: mongodb://mongoUser:mongoPass@mongodb
+      MONGO_SERVER_URL: mongodb
+      MONGO_SERVER_USER: mongoUser
+      MONGO_SERVER_PASS: mongoPass
+    entrypoint: python3 /main.py
+    depends_on:
+      - mongodb
+    networks:
+      - testing_net
+  mongodb:
     image: mongo
-    restart: always
+    #    restart: always
     environment:
-      MONGO_INITDB_ROOT_USERNAME: taller
-      MONGO_INITDB_ROOT_PASSWORD: taller
+      MONGODB_INITDB_ROOT_USERNAME: mongoUser
+      MONGODB_INITDB_ROOT_PASSWORD: mongoPass
+    ports:
+      - "27017:27017"
+    logging:
+      driver: none
+    volumes:
+      - ./mongodb/data:/data/db
+    networks:
+      - testing_net
+
+networks:
+  testing_net:
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.25.125.0/24

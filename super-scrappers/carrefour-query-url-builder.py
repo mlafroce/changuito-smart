@@ -56,6 +56,7 @@ def retrieve_items(category):
 			print("Request ok")
 		data = response.json()
 		try:
+			print("DATA:", data)
 			total_items = data['data']['productSearch']['recordsFiltered']
 		except TypeError:
 			print("Unexpected data error")
