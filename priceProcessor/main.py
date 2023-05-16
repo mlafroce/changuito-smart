@@ -1,12 +1,12 @@
 import logging
 import os
+import time
 from threading import Thread
+
+from pymongo import MongoClient
 
 from src.products_manager import Products
 from src.server import Server
-
-
-# from pymongo import MongoClient
 
 
 def load_envs_config():
@@ -19,15 +19,10 @@ def load_envs_config():
             'url': os.environ.get('MONGO_SERVER_URL', ''),
             'user': os.environ.get('MONGO_SERVER_USER', ''),
             'pass': os.environ.get('MONGO_SERVER_PASS', ''),
+            'database': os.environ.get('MONGO_SERVER_DATABASE', 'changuito'),
+            # 'conn_str': os.environ.get('MONGO_SERVER_CONNECTION_STRING', ''),
         }
     }
-
-
-# def db_setup():
-#     print(f"Connecting to {MONGO_SERVER_URL}")
-#     mongo_client = MongoClient(MONGO_SERVER_URL, username=MONGO_SERVER_USER, password=MONGO_SERVER_PASS);
-#     changuito_db = mongo_client["changuito"]
-#     products_collection = changuito_db["products"]
 
 
 def initialize_log():
@@ -41,10 +36,12 @@ def initialize_log():
 def main():
     initialize_log()
     try:
+        time.sleep(20)
         configs = load_envs_config()
-        # db_setup()
+        url, usr, password, database = configs.get('db').values()
+        db_client = MongoClient(url, username=usr, password=password, authSource=database)
         logging.info("DB runnig... ")
-        productManager = Products()
+        productManager = Products(db_client)
         logging.info("Products() created... ")
         host, port = configs.get('server').values()
         server = Server(host, port, productManager)
@@ -59,3 +56,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
