@@ -28,7 +28,7 @@ extensions_variables_encoded = base64.b64encode(extensions_variables_str.encode(
 
 extensions = {"persistedQuery":{"version":1,"sha256Hash":"8d81f8e7468bea2046b664a5a1d9e4bb4e1f3f9e340dcb3701fd68b15c0e8025","sender":"vtex.store-resources@0.x","provider":"vtex.search-graphql@0.x"},"variables":extensions_variables_encoded }
 
-extensions_encoded = urllib.parse.quote(json.dumps(extensions, separators=(',', ':')))
+extensions_encoded = urllib.parse.quote(json.dumps(extensions_variables_encoded, separators=(',', ':')))
 
 query_path = f"{HOST}/{QUERY_PATH_ROOT}?{QUERY_PATH_VARIABLES}&extensions={extensions_encoded}"
 print(query_path)

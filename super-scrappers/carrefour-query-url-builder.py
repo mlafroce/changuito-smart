@@ -38,7 +38,7 @@ def request_page(category, page_id):
 	extensions_encoded = urllib.parse.quote(json.dumps(extensions, separators=(',', ':')))
 
 	query_path = f"{HOST}/{QUERY_PATH_ROOT}?{QUERY_PATH_VARIABLES}&extensions={extensions_encoded}"
-
+	print(query_path)
 	return requests.get(query_path)
 
 def retrieve_items(category):

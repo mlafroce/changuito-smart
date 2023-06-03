@@ -1,10 +1,12 @@
-class Category(object):
-    def __init__(self, id, name, level=1, req=True, parents=None):
-        print(id, name)
-        self.id = id
+import json
+from json import JSONEncoder
+
+
+class Category:
+    def __init__(self, category_id, name, level, parents):
+        self.id = category_id
         self.name = name
         self._level = level
-        self._required = req
         self._parent = parents
 
     def __str__(self):
@@ -12,27 +14,33 @@ class Category(object):
 
 
 class Product:
-    def __init__(self, id, brand, minPrice, maxPrice, currentPrice, description, branch=None, categories=None):
-        self.id = id
+    def __init__(self, prod_id, brand, description, min_price, max_price, categories=None):
+        self.id = prod_id
         self.brand = brand
-        self.price = ProductPrice(minPrice, maxPrice, currentPrice)
+        self.price = ProductRangePrices(min_price, max_price)
         self.description = description
-        self.branch = branch
         self.categories = categories
         # self.presentacion= "320.0 gr"
         # self.cantSucursalesDisponible= 24
 
 
-class ProductPrice:
-    def __init__(self, min, max, current):
-        self.min = min
-        self.max = max
-        self.current = current
+class ProductRangePrices:
+    def __init__(self, min_price, max_price):
+        self.min = min_price
+        self.max = max_price
+
+
+class Price:
+    def __init__(self, product_id, branch_id, price, date):
+        self.product_id = product_id
+        self.branch_id = branch_id
+        self.price = price
+        self.date = date
 
 
 class Branch:
-    def __init__(self, id, name, lat, long, address, city, trade):
-        self.id = id
+    def __init__(self, branchid, name, lat, long, address, city, trade):
+        self.id = branchid
         self.name = name
         self.location = Location(lat, long, address, city)
         self.trade_name = trade
@@ -54,6 +62,19 @@ class Branch:
 
     def __str__(self):
         return f'Id: {self.id} Add:{self.location.address}'
+
+
+class DomainEncoder(JSONEncoder):
+    def default(self, obj):
+        if isinstance(obj, Branch) \
+                or isinstance(obj, Location) \
+                or isinstance(obj, Category) \
+                or isinstance(obj, Product) \
+                or isinstance(obj, ProductRangePrices) \
+                or isinstance(obj, Price):
+            return obj.__dict__
+        else:
+            return json.JSONEncoder.default(self, obj)
 
 
 class Location:

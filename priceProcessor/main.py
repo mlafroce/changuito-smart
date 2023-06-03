@@ -5,7 +5,7 @@ from threading import Thread
 
 from pymongo import MongoClient
 
-from src.products_manager import Products
+from src.products_manager import DomainManager
 from src.server import Server
 
 
@@ -15,11 +15,11 @@ def load_envs_config():
             'host': os.environ.get('HOST', '0.0.0.0'),
             'port': int(os.environ.get('PORT', 5000))
         },
-        'db': {
+        'db_client': {
             'url': os.environ.get('MONGO_SERVER_URL', ''),
             'user': os.environ.get('MONGO_SERVER_USER', ''),
             'pass': os.environ.get('MONGO_SERVER_PASS', ''),
-            'database': os.environ.get('MONGO_SERVER_DATABASE', 'changuito'),
+            'database': os.environ.get('MONGO_DATABASE', 'changuito'),
             # 'conn_str': os.environ.get('MONGO_SERVER_CONNECTION_STRING', ''),
         }
     }
@@ -36,12 +36,13 @@ def initialize_log():
 def main():
     initialize_log()
     try:
-        time.sleep(20)
+        time.sleep(3)
         configs = load_envs_config()
-        url, usr, password, database = configs.get('db').values()
-        db_client = MongoClient(url, username=usr, password=password, authSource=database)
+        url, usr, password, database = configs.get('db_client').values()
+        db_client = MongoClient(url, username=usr, password=password)#, authSource=database)
+        db = db_client[database]
         logging.info("DB runnig... ")
-        productManager = Products(db_client)
+        productManager = DomainManager(db_client, db)
         logging.info("Products() created... ")
         host, port = configs.get('server').values()
         server = Server(host, port, productManager)
