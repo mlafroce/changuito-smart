@@ -42,34 +42,12 @@ def main():
     initialize_log()
     try:
         time.sleep(6)
-        # branches_scrapper = BranchesScrapper(dst_url=f"http://{processor_host}:{procesor_port}",
-        #                                      dst_endpoint=post_branches_endpoint,
-        #                                      url=url, endpoint=endpoints["branches"], limit=30,
-        #                                      domain=Branch, domain_encoder=DomainEncoder, name="BRANCHES"
-        #                                      )
-        # categories_scrapper = CategoriesScrapper(dst_url=f"http://{processor_host}:{procesor_port}",
-        #                                          dst_endpoint=post_branches_endpoint,
-        #                                          url=url, endpoint=endpoints["categories"], limit=100,
-        #                                          domain=Category, domain_encoder=DomainEncoder, name="CATEGORIES"
-        #                                          )
-        # products_scrapper = ProductsScrapper(dst_url=f"http://{processor_host}:{procesor_port}",
-        #                                      dst_endpoint=post_product_endpoint,
-        #                                      url=url, endpoint=endpoints["products"], limit=100,
-        #                                      domain=Product, domain_encoder=DomainEncoder, name="PRODUCTS",
-        #                                      branch_scrapper=branches_scrapper, category_scrapper=categories_scrapper)
         prices_scrapper = PriceScrapper(dst_url=f"http://{processor_host}:{procesor_port}",
                                         dst_endpoints=post_endpoints,
                                         scrap_url=url, scrap_endpoints=endpoints, limit=100)
 
-        prices_scrapper.scrap()
-
-        # branches_scrapper.scrap()
+        # prices_scrapper.scrap()
         logging.info("Initializing... ")
-        # gov = BaseScrapper(f"http://{processor_host}:5000")
-        # # gov.scrap()
-        # gov.send_data()
-        # time.sleep(10)
-        # gov.send_data()
 
         # sch = ScheduleTask()
         # sch.daily_run_at(gov.send_data, SCHEDULE_HOUR, SCHEDULE_MIN)

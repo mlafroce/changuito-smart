@@ -8,6 +8,7 @@ all:
 docker-image:
 	docker build -f ./scrappers/preciosClaros/Dockerfile -t "preciosclarosscrapper:latest" .
 	docker build -f ./priceProcessor/Dockerfile -t "priceprocessor:latest" .
+	docker build -f ./elasticManager/Dockerfile -t "elasticmanager:latest" .
 .PHONY: build
 
 docker-compose-up: docker-image

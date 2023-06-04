@@ -23,8 +23,8 @@ services:
       PRICES_ENDPOINT: "/prod/productos"
     networks:
       - testing_net
-#    logging:
-#      driver: none
+    logging:
+      driver: none
 
   priceprocessor:
     container_name: priceprocessor
@@ -44,8 +44,8 @@ services:
       - mongodb
     networks:
       - testing_net
-#    logging:
-#      driver: none
+    logging:
+      driver: none
 
   mongodb:
     image: mongo
@@ -63,6 +63,49 @@ services:
       - ./mongodb/data:/data/db
     networks:
       - testing_net
+
+  elasticmanager:
+    container_name: elasticmanager
+    image: elasticmanager:latest
+    entrypoint: python3 /main.py
+    environment:
+      HOST: priceprocessor
+      PORT: 5000
+      CONN_STR: mongodb://mongoUser:mongoPass@mongodb
+      MONGO_SERVER_URL: mongodb
+      MONGO_SERVER_USER: mongoUser
+      MONGO_SERVER_PASS: mongoPass
+      MONGO_DATABASE: changuito
+      ELASTICSEARCH_URL: http://elasticsearch:9200
+    ports:
+      - '5601:5601'
+    depends_on:
+      - mongodb
+      - elasticsearch
+    networks:
+      - testing_net
+    #    logging:
+    #      driver: none
+
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.8.0
+    container_name: elasticsearch
+    restart: always
+    environment:
+      - xpack.security.enabled=false
+      - discovery.type=single-node
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    volumes:
+      - ./elastic/data:/usr/share/elasticsearch/data
+    ports:
+      - 9200:9200
+    networks:
+      - testing_net
+    logging:
+      driver: none
 
 networks:
   testing_net:

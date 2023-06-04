@@ -33,7 +33,7 @@ def request_page(category, page_id):
 	extensions_variables_str = json.dumps(extensions_variables, separators=(',', ':'))
 	extensions_variables_encoded = base64.b64encode(extensions_variables_str.encode('ascii')).decode('ascii')
 
-	extensions = {"persistedQuery":{"version":1,"sha256Hash":"8d81f8e7468bea2046b664a5a1d9e4bb4e1f3f9e340dcb3701fd68b15c0e8025","sender":"vtex.store-resources@0.x","provider":"vtex.search-graphql@0.x"},"variables":extensions_variables_encoded }
+	extensions = {"persistedQuery":{"version":1,"sha256Hash":"40e207fe75d9dce4dfb3154442da4615f2b097b53887a0ae5449eb92d42e84db","sender":"vtex.store-resources@0.x","provider":"vtex.search-graphql@0.x"},"variables":extensions_variables_encoded }
 
 	extensions_encoded = urllib.parse.quote(json.dumps(extensions, separators=(',', ':')))
 
