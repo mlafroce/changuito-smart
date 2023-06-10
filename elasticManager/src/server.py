@@ -46,23 +46,6 @@ class Server:
             logging.error("Could not set routes")
 
     def _handle_get(self):
-        # print("handle get")
-        # doc = {
-        #     'author': 'kimchy',
-        #     'text': 'Elasticsearch: cool. bonsai cool.',
-        #     'timestamp': date.today(),
-        # }
-        # resp = self.elastic_client.index(index="test-index", id=1, document=doc)
-        # print(resp['result'])
-        #
-        # resp = self.elastic_client.get(index="test-index", id=1)
-        # print(resp['_source'])
-        #
-        # self.elastic_client.indices.refresh(index="test-index")
-        # resp = self.elastic_client.search(index="test-index", query={"match_all": {}})
-        # print("Got %d Hits:" % resp['hits']['total']['value'])
-        # for hit in resp['hits']['hits']:
-        #     print("%(timestamp)s %(author)s: %(text)s" % hit["_source"])
         return {"status": "OK"}
 
     def _handle_post(self):

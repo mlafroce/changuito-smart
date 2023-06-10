@@ -11,53 +11,6 @@ AGENT_USER = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_5) AppleWebKit/537.36
 BRANCH_PARAMS_LIMIT = 30
 PRODUCT_PARAMS_LIMIT = 100
 
-
-#
-# class ScrapperA:
-#     def __init__(self, **kwargs):
-#         self.name = kwargs.get("name")
-#         self.url = kwargs.get("url", "https://d3e6htiiul5ek9.cloudfront.net")
-#         self.endpoint = kwargs.get("endpoint")
-#         self.dst_url = kwargs.get("dst_url")
-#         self.dst_endpoint = kwargs.get("dst_endpoint")
-#         self.enpoint_limit_result = kwargs.get("limit", 30)
-#         self.domain = kwargs.get("domain")
-#         self.encoder = kwargs.get("domain_encoder")
-#
-#     def scrap(self):
-#         datavieja = self._get_data()
-#         url = f"{self.dst_url}{self.dst_endpoint}"
-#         response = requests.post(url, json=json.dumps(datavieja, cls=self.encoder))
-#         logging.info(response.json())
-#
-#     def _get_data(self):
-#         logging.info(f'Getting {self.name}...')
-#         response = self._send_request()
-#         datavieja = self._to_domain(response["sucursales"])
-#         currentOffset = self.enpoint_limit_result
-#         # while len(datavieja) == currentOffset:
-#         #     response = self._send_request(currentOffset)
-#         #     datavieja += self._to_domain(response["sucursales"])
-#         #     currentOffset += self.enpoint_limit_result
-#         logging.info(f'>>> {len(datavieja)} {self.name} were found')
-#         return datavieja
-#
-#     def _send_request(self, offset=0):
-#         url = f"{self.url}{self.endpoint}"
-#         logging.info(f"Getting datavieja from {url} with offset {offset}")
-#         return requests.get(url,
-#                             params={"limit": self.enpoint_limit_result,
-#                                     "offset": offset},
-#                             headers={'User-Agent': AGENT_USER}
-#                             ).json()
-#
-#     def _to_domain(self, json_branch_list):
-#         return list(map(lambda x: Branch(x["id"], x["sucursalNombre"],
-#                                          x["lat"], x["lng"], x["direccion"], x["localidad"],
-#                                          x["comercioRazonSocial"]),
-#                         json_branch_list))
-
-
 class BaseScrapper:
     def __init__(self, **kwargs):
         self.name = kwargs.get("name")

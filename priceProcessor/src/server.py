@@ -5,21 +5,6 @@ import pymongo
 from flask import Flask, request
 
 
-# class GenericHandler:
-#     def __init__(self, handle, method):
-#         self.handle = handle
-#         self.method = method
-#
-#     def __call__(self, *args):
-#         try:
-#             datavieja = self.handle(args)
-#             if datavieja:
-#                 return Response(response=datavieja, status=200, headers={})
-#             return Response(status=200, headers={})
-#         except:
-#             return Response(status=400)
-
-
 class Server:
     def __init__(self, host, port, domain_manager=None):
         self.app = Flask(__name__)
@@ -27,9 +12,6 @@ class Server:
         self.port = port
         self.domain_manager = domain_manager
         self.set_routes()
-
-    # def route(self, endpoint, handler, methods=['GET']):
-    #     self.app.add_url_rule(endpoint, methods=methods, GenericHandler(handler.handle, methods[0]))
 
     def set_routes(self):
         try:
@@ -52,8 +34,6 @@ class Server:
     def _handle_post_branches(self):
         try:
             data = request.get_json()
-            # validate branches schema
-            # branches = map(lambda x: (Branch(x)), datavieja)
             response = self.domain_manager.add_branches(json.loads(data))
             logging.info(f"Branches ids inserted {len(response)}")
             return {"inserted": len(response)}

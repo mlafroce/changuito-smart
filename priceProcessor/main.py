@@ -19,8 +19,7 @@ def load_envs_config():
             'url': os.environ.get('MONGO_SERVER_URL', ''),
             'user': os.environ.get('MONGO_SERVER_USER', ''),
             'pass': os.environ.get('MONGO_SERVER_PASS', ''),
-            'database': os.environ.get('MONGO_DATABASE', 'changuito'),
-            # 'conn_str': os.environ.get('MONGO_SERVER_CONNECTION_STRING', ''),
+            'database': os.environ.get('MONGO_DATABASE', 'changuito')
         }
     }
 
@@ -39,7 +38,7 @@ def main():
         time.sleep(3)
         configs = load_envs_config()
         url, usr, password, database = configs.get('db_client').values()
-        db_client = MongoClient(url, username=usr, password=password)#, authSource=database)
+        db_client = MongoClient(url, username=usr, password=password)
         db = db_client[database]
         logging.info("DB runnig... ")
         productManager = DomainManager(db_client, db)

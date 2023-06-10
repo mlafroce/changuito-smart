@@ -45,28 +45,14 @@ def main():
         prices_scrapper = PriceScrapper(dst_url=f"http://{processor_host}:{procesor_port}",
                                         dst_endpoints=post_endpoints,
                                         scrap_url=url, scrap_endpoints=endpoints, limit=100)
-
-        # prices_scrapper.scrap()
         logging.info("Initializing... ")
-
         # sch = ScheduleTask()
-        # sch.daily_run_at(gov.send_data, SCHEDULE_HOUR, SCHEDULE_MIN)
+        # sch.daily_run_at(prices_scrapper.scrap, SCHEDULE_HOUR, SCHEDULE_MIN)
         server = SimpleServer(HOST, PORT)
         serverThread = Thread(target=server.run)
         serverThread.start()
-
-        # for thread in threads:
-        #     thread.start()
         logging.info("server runnig... ")
-
-        # for thread in threads:
-        #     # only move on when this thread finished
         serverThread.join()
-        # threads.append(Thread(target=, args=(stop_event, shared_block_to_mine, start_mining_event, new_block_event)))
-    # except (KeyboardInterrupt, SystemExit):
-    #     # Not strictly necessary if daemonic mode is enabled but should be done if possible
-    #     sch.shutdown()
-    #     server.close()
     except Exception as error:
         logging.error(f"Something Wrong in main function: {error}")
 
