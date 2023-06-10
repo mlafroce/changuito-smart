@@ -129,5 +129,7 @@ dmypy.json
 .pyre/
 
 mongodb/data/*
+mongodb/data*
 urls*/*
 .idea/
+elastic/data/*
