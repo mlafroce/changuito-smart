@@ -54,7 +54,7 @@ class BaseScrapper:
 
     def send_data(self):
         data = self.supermarket_branches()
-        # logging.info(json.dumps(data, cls=DomainEncoder))
+        # logging.info(json.dumps(datavieja, cls=DomainEncoder))
         url = f"{self.dataProcessorHost}{self.endpoints['branches']}"
         response = requests.post(url, json=json.dumps(data, cls=DomainEncoder))
         logging.info(response.json())

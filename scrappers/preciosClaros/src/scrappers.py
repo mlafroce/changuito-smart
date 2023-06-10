@@ -25,26 +25,26 @@ PRODUCT_PARAMS_LIMIT = 100
 #         self.encoder = kwargs.get("domain_encoder")
 #
 #     def scrap(self):
-#         data = self._get_data()
+#         datavieja = self._get_data()
 #         url = f"{self.dst_url}{self.dst_endpoint}"
-#         response = requests.post(url, json=json.dumps(data, cls=self.encoder))
+#         response = requests.post(url, json=json.dumps(datavieja, cls=self.encoder))
 #         logging.info(response.json())
 #
 #     def _get_data(self):
 #         logging.info(f'Getting {self.name}...')
 #         response = self._send_request()
-#         data = self._to_domain(response["sucursales"])
+#         datavieja = self._to_domain(response["sucursales"])
 #         currentOffset = self.enpoint_limit_result
-#         # while len(data) == currentOffset:
+#         # while len(datavieja) == currentOffset:
 #         #     response = self._send_request(currentOffset)
-#         #     data += self._to_domain(response["sucursales"])
+#         #     datavieja += self._to_domain(response["sucursales"])
 #         #     currentOffset += self.enpoint_limit_result
-#         logging.info(f'>>> {len(data)} {self.name} were found')
-#         return data
+#         logging.info(f'>>> {len(datavieja)} {self.name} were found')
+#         return datavieja
 #
 #     def _send_request(self, offset=0):
 #         url = f"{self.url}{self.endpoint}"
-#         logging.info(f"Getting data from {url} with offset {offset}")
+#         logging.info(f"Getting datavieja from {url} with offset {offset}")
 #         return requests.get(url,
 #                             params={"limit": self.enpoint_limit_result,
 #                                     "offset": offset},

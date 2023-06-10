@@ -12,9 +12,9 @@ from flask import Flask, request
 #
 #     def __call__(self, *args):
 #         try:
-#             data = self.handle(args)
-#             if data:
-#                 return Response(response=data, status=200, headers={})
+#             datavieja = self.handle(args)
+#             if datavieja:
+#                 return Response(response=datavieja, status=200, headers={})
 #             return Response(status=200, headers={})
 #         except:
 #             return Response(status=400)
@@ -53,7 +53,7 @@ class Server:
         try:
             data = request.get_json()
             # validate branches schema
-            # branches = map(lambda x: (Branch(x)), data)
+            # branches = map(lambda x: (Branch(x)), datavieja)
             response = self.domain_manager.add_branches(json.loads(data))
             logging.info(f"Branches ids inserted {len(response)}")
             return {"inserted": len(response)}

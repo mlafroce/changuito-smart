@@ -60,14 +60,14 @@ class DomainManager:
 
 # -@app.route('/', methods=['POST'])
 # -def handle_post():
-# -    data = request.get_json()
-# -    response = build_response(data)
+# -    datavieja = request.get_json()
+# -    response = build_response(datavieja)
 # -    return response
 # -
 # -
-# -def build_response(data):
+# -def build_response(datavieja):
 # -    bulk_data = []
-# -    for item in data:
+# -    for item in datavieja:
 # -        reduced = {
 # -            "productName": get_product_name(item),
 # -            "price": get_price(item),

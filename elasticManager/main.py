@@ -36,10 +36,11 @@ def initialize_log():
 
 
 def main():
-    logging.info("after sleep")
     initialize_log()
+    logging.info("after sleep")
+
     # try:
-    time.sleep(5)
+    time.sleep(25)
     logging.info("after sleep")
     configs = load_envs_config()
     logging.info("after envs config")

@@ -55,17 +55,17 @@ def retrieve_items(category):
 			print("Request ok")
 		data = response.json()
 		try:
-			total_items = data['data']['productSearch']['recordsFiltered']
+			total_items = data['datavieja']['productSearch']['recordsFiltered']
 		except TypeError:
-			print("Unexpected data error")
+			print("Unexpected datavieja error")
 			print(f"URL: {response.url}")
 			print(data)
 			return
 		pages = total_items // MAX_ITEMS_PER_PAGE + 1
 		filename = "jumbo-{}-{}.json".format(category, current_page)
 		with open(filename, "w") as output:
-			# Writing data to a file
-			product_list = data['data']['productSearch']['products']
+			# Writing datavieja to a file
+			product_list = data['datavieja']['productSearch']['products']
 			output.write(json.dumps(product_list))
 		current_page += 1
 

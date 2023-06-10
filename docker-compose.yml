@@ -1,66 +1,66 @@
 version: '3'
 services:
-  preciosclarosscrapper:
-    container_name: preciosclarosscrapper
-    image: preciosclarosscrapper:latest
-    entrypoint: python3 /main.py
-    environment:
-      PYTHONUNBUFFERED: 1
-      HOST: 8008
-#     processor envs
-      POST: preciosclarosscrapper
-      PROCESSOR_HOST: priceprocessor
-      PROCESSOR_PORT: 5000
-      PROCESSOR_POST_BRANCHES: "/branches"
-      PROCESSOR_POST_CATEGORIES: "/categories"
-      PROCESSOR_POST_PRODUCT: "/product"
-      PROCESSOR_POST_PRICE: "/price"
-#     page to scrap envs
-      URL_TO_SCRAP: "https://d3e6htiiul5ek9.cloudfront.net"
-      BRANCH_ENDPOINT: "/prod/sucursales"
-      CATEGORY_ENDPOINT: "/prod/categorias"
-      PRODUCTS_ENDPOINT: "/prod/productos"
-      PRICES_ENDPOINT: "/prod/productos"
-    networks:
-      - testing_net
-    logging:
-      driver: none
-
-  priceprocessor:
-    container_name: priceprocessor
-    image: priceprocessor:latest
-    ports:
-      - "5000:5000"
-    environment:
-      HOST: priceprocessor
-      PORT: 5000
-      CONN_STR: mongodb://mongoUser:mongoPass@mongodb
-      MONGO_SERVER_URL: mongodb
-      MONGO_SERVER_USER: mongoUser
-      MONGO_SERVER_PASS: mongoPass
-      MONGO_DATABASE: changuito
-    entrypoint: python3 /main.py
-    depends_on:
-      - mongodb
-    networks:
-      - testing_net
-    logging:
-      driver: none
+#  preciosclarosscrapper:
+#    container_name: preciosclarosscrapper
+#    image: preciosclarosscrapper:latest
+#    entrypoint: python3 /main.py
+#    environment:
+#      PYTHONUNBUFFERED: 1
+#      HOST: 8008
+##     processor envs
+#      POST: preciosclarosscrapper
+#      PROCESSOR_HOST: priceprocessor
+#      PROCESSOR_PORT: 5000
+#      PROCESSOR_POST_BRANCHES: "/branches"
+#      PROCESSOR_POST_CATEGORIES: "/categories"
+#      PROCESSOR_POST_PRODUCT: "/product"
+#      PROCESSOR_POST_PRICE: "/price"
+##     page to scrap envs
+#      URL_TO_SCRAP: "https://d3e6htiiul5ek9.cloudfront.net"
+#      BRANCH_ENDPOINT: "/prod/sucursales"
+#      CATEGORY_ENDPOINT: "/prod/categorias"
+#      PRODUCTS_ENDPOINT: "/prod/productos"
+#      PRICES_ENDPOINT: "/prod/productos"
+#    networks:
+#      - testing_net
+#    logging:
+#      driver: none
+#
+#  priceprocessor:
+#    container_name: priceprocessor
+#    image: priceprocessor:latest
+#    ports:
+#      - "5000:5000"
+#    environment:
+#      HOST: priceprocessor
+#      PORT: 5000
+#      CONN_STR: mongodb://mongoUser:mongoPass@mongodb
+#      MONGO_SERVER_URL: mongodb
+#      MONGO_SERVER_USER: mongoUser
+#      MONGO_SERVER_PASS: mongoPass
+#      MONGO_DATABASE: changuito
+#    entrypoint: python3 /main.py
+#    depends_on:
+#      - mongodb
+#    networks:
+#      - testing_net
+#    logging:
+#      driver: none
 
   mongodb:
     image: mongo
-    #    restart: always
+    restart: always
     environment:
       MONGO_INITDB_ROOT_USERNAME: mongoUser
       MONGO_INITDB_ROOT_PASSWORD: mongoPass
       MONGO_INITDB_DATABASE: changuito
     ports:
       - "27017:27017"
-    logging:
-      driver: none
+#    logging:
+#      driver: none
     volumes:
-#      - ./mongodb/mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
-      - ./mongodb/data:/data/db
+      - ./mongodb/mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
+#      - ./mongodb/data:/data/db
     networks:
       - testing_net
 
@@ -92,8 +92,12 @@ services:
     container_name: elasticsearch
     restart: always
     environment:
-      - xpack.security.enabled=false
       - discovery.type=single-node
+      - cluster.name=docker-cluster
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+      - xpack.security.enabled=false
+      - xpack.watcher.enabled=false
     ulimits:
       memlock:
         soft: -1
