@@ -16,7 +16,7 @@ def request_page(category, page_id):
 	extensions_variables = {
 		"hideUnavailableItems":True,
 		"skusFilter":"FIRST_AVAILABLE",
-		"simulationBehavior":"default",jumbo-query-url-builder
+		"simulationBehavior":"default",
 		"installmentCriteria":"MAX_WITHOUT_INTEREST",
 		"productOriginVtex":False,
 		"orderBy":"OrderByScoreDESC",

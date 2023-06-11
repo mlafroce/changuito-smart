@@ -66,9 +66,9 @@ def retrieve_items(category):
 		pages = total_items // MAX_ITEMS_PER_PAGE + 1
 		filename = "carrefour-{}-{}.json".format(category, current_page)
 		with open(filename, "w") as output:
-		    # Writing datavieja to a file
-		    product_list = data['datavieja']['productSearch']['products']
-		    output.write(json.dumps(product_list))
+			# Writing data to a file
+			product_list = data['data']['productSearch']['products']
+			output.write(json.dumps(product_list))
 		current_page += 1
 
 categories = ["almacen", "electro-y-tecnologia", "bazar-y-textil", "desayuno-y-merienda", "bebidas", "lacteos-y-productos-frescos"]
