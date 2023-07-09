@@ -37,23 +37,20 @@ def initialize_log():
 def main():
     initialize_log()
     logging.info("after sleep")
-    time.sleep(25)
+    #time.sleep(25)
     logging.info("after sleep")
     configs = load_envs_config()
     logging.info("after envs config")
+    print("configs", configs)
     url, usr, password, database = configs.get('db_client').values()
     db_client = MongoClient(url, username=usr, password=password)
     db = db_client[database]
-    logging.info("DB runnig... ")
+    logging.info("DB running... ")
     elastic_url = configs.get('elastic_client').get('url')
     host, port = configs.get('server').values()
     server = Server(host, port, db, elastic_url)
-    logging.info(" Server created... ")
-    serverThread = Thread(target=server.run)
-    serverThread.start()
-    logging.info("Server runnig... ")
-    serverThread.join()
-
+    logging.info(" Server starting... ")
+    server.run()
 
 if __name__ == "__main__":
     main()
