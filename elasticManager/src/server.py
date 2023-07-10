@@ -1,9 +1,9 @@
 import logging
 from datetime import date
 
-from elasticsearch import Elasticsearch, BadRequestError
+from elasticsearch import Elasticsearch
 from flask import Flask, request
-
+from src.branchManager import BranchManager
 
 class Server:
     def __init__(self, host, port, db_client, elastic_url):
@@ -17,7 +17,10 @@ class Server:
         self.set_routes()
         a = self._handle_get()
 
-        self.index_branches()
+        branch_manager = BranchManager(self.elastic_client, db_client)
+        branch_manager.assert_index()
+        branch_manager.index_documents()
+
         collection = db_client['Products']
         cursor = collection.find({})
         if not cursor:
@@ -50,41 +53,6 @@ class Server:
 
     def close(self):
         pass
-
-    def index_branches(self):
-        request_body = {
-            "settings" : {
-                "number_of_shards": 1,
-                "number_of_replicas": 1
-            },
-
-            "mappings": {
-                "properties": {
-                    "name": {"type": "text"},
-                    "branch": {"type": "text"},
-                    "address": {"type": "text"},
-                    "location": {"type": "geo_point"},
-                }
-            }
-        }
-        print("creating 'branches' index...")
-        try:
-            resp = self.elastic_client.indices.create(index = 'branches', body = request_body)
-            print (resp)
-        except BadRequestError as e:
-            print(e.info)
-
-        collection = self.db_client['Branches']
-        print("Querying info")
-        cursor = collection.find({})
-        if not cursor:
-            raise ValueError("MONGO NO DATA LPMQLP")
-        else:
-            for doc in cursor:
-                print(doc)
-
-        #resp = self.elastic_client.index(index="branches", id=1, document)
-        #print("Index result: ", resp['result'])
 
     def run(self):
         print(f"running {self.host}:{self.port}")
